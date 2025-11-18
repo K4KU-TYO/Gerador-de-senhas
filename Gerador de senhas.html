@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://127.0.0.1:5500/Gerador_de_senhas.html -->
+<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TYO-SCRIPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000; /* Fundo preto */
+            color: #3bff21;
+        }
+
+        .container {
+            background-color: #000000;
+            padding: 50px;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(243, 57, 57, 0.7);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            margin: 10px 0;
+            background-color: #333;
+            color: #eaebee;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .result {
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            background-color: #000000;
+            color: #2f33ff; /* Senha com cor verde-claro */
+            text-align: left;
+            white-space: pre-line;
+            overflow-wrap: break-word;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #27352b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1900ff;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>GERADOR</h2>
+
+        <label for="length">Tamanho da Senha:</label>
+        <input type="number" id="length" value="12" min="6" max="30"><br>
+
+        <label for="amount">Quantidade de Senhas:</label>
+        <input type="number" id="amount" value="1" min="1" max="10"><br>
+
+        <label>
+            <input type="checkbox" id="uppercase" checked="">
+            Incluir Maiúsculas
+        </label><br>
+        
+        <label>
+            <input type="checkbox" id="lowercase" checked="">
+            Incluir Minúsculas
+        </label><br>
+
+        <label>
+            <input type="checkbox" id="numbers" checked="">
+            Incluir Números
+        </label><br>
+
+        <label>
+            <input type="checkbox" id="symbols">
+            Incluir Símbolos
+        </label><br>
+
+        <button onclick="generatePassword()">Gerar Senha(s)</button>
+
+        <div class="result" id="passwordResult">Clique para gerar uma senha</div>
+    </div>
+
+    <script>
+        function getRandomLower() {
+            return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+        }
+
+        function getRandomUpper() {
+            return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+        }
+
+        function getRandomNumber() {
+            return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
+        }
+
+        function getRandomSymbol() {
+            const symbols = '!@#$%^&*(){}[]=<>/,.';
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const amount = document.getElementById('amount').value;
+            const hasUpper = document.getElementById('uppercase').checked;
+            const hasLower = document.getElementById('lowercase').checked;
+            const hasNumber = document.getElementById('numbers').checked;
+            const hasSymbol = document.getElementById('symbols').checked;
+
+            let generatedPasswords = '';
+            const typesCount = hasUpper + hasLower + hasNumber + hasSymbol;
+            const typesArr = [{ hasUpper }, { hasLower }, { hasNumber }, { hasSymbol }].filter(
+                item => Object.values(item)[0]
+            );
+
+            if (typesCount === 0) {
+                document.getElementById('passwordResult').innerText = "Selecione pelo menos uma opção de caracteres!";
+                return;
+            }
+
+            // Gerar múltiplas senhas conforme o valor do 'amount'
+            for (let j = 0; j < amount; j++) {
+                let generatedPassword = '';
+                for (let i = 0; i < length; i += typesCount) {
+                    typesArr.forEach(type => {
+                        const funcName = Object.keys(type)[0];
+                        generatedPassword += {
+                            hasLower: getRandomLower,
+                            hasUpper: getRandomUpper,
+                            hasNumber: getRandomNumber,
+                            hasSymbol: getRandomSymbol
+                        }[funcName]();
+                    });
+                }
+
+                const finalPassword = generatedPassword.slice(0, length);
+                generatedPasswords += finalPassword + '\n'; // Adicionar cada senha em uma nova linha
+            }
+
+            document.getElementById('passwordResult').innerText = generatedPasswords.trim();
+        }
+    </script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
